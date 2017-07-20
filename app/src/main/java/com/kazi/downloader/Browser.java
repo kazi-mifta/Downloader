@@ -19,6 +19,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
+import android.webkit.WebSettings;
 
 import com.ayz4sci.androidfactory.DownloadProgressView;
 import com.kazi.downloader.databinding.ActivityBrowserBinding;
@@ -53,7 +54,7 @@ public class Browser extends Activity{
         else{
             setupWebView();
             loadFromDownloader(url);
-            //setupTxtUrl();
+            setupTxtUrl();
         }
 
     }
@@ -89,6 +90,11 @@ public class Browser extends Activity{
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT)
             binding.webView.getSettings().setSavePassword(false);
         binding.webView.getSettings().setJavaScriptEnabled(true);
+        binding.webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+        WebSettings websettings = binding.webView.getSettings();
+        websettings.setJavaScriptEnabled(true);
+        websettings.setDomStorageEnabled(true);
+        websettings.setUserAgentString("Mozilla/5.0 (Linux; Android 4.1.2; C1905 Build/15.1.C.2.8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1847.114 Mobile Safari/537.36");
         binding.webView.setVerticalScrollBarEnabled(false);
         binding.webView.setHorizontalScrollBarEnabled(false);
         binding.webView.setWebViewClient(new WebViewClient() {
