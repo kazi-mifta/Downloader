@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@color/materialGrey"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="@dimen/size_2dp">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="@dimen/size_2dp"
+                android:layout_marginRight="@dimen/size_2dp"
+                android:clickable="true"
+                android:contentDescription="@null"
+                android:onClick="back"
+                android:src="@drawable/ic_chevron_left_white_24dp"/>
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="@dimen/size_2dp"
+                android:layout_marginRight="@dimen/size_2dp"
+                android:clickable="true"
+                android:contentDescription="@null"
+                android:onClick="forward"
+                android:src="@drawable/ic_chevron_right_white_24dp"/>
+
+
+
+            <EditText
+                android:id="@+id/txtUrl"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:background="@android:color/white"
+                android:hint="@string/hint_url"
+                android:imeOptions="flagNoFullscreen|flagNoExtractUi|actionGo"
+                android:inputType="textWebEmailAddress"
+                android:maxLines="1"
+                android:padding="@dimen/size_2dp"
+                android:textColor="@android:color/black"
+                android:textColorHint="@color/light_gray"/>
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="@dimen/size_2dp"
+                android:layout_marginRight="@dimen/size_2dp"
+                android:clickable="true"
+                android:contentDescription="@null"
+                android:onClick="refresh"
+                android:src="@drawable/ic_refresh_white_24dp"/>
+
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/size_4dp"
+            android:max="100"
+            android:progressDrawable="@drawable/progress_bar"
+            android:visibility="gone"/>
+
+        <WebView
+            android:id="@+id/webView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@android:color/white"/>
+    </LinearLayout>
+
+</layout>
