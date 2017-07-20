@@ -35,6 +35,8 @@ dependencies {
 
     compile 'com.github.medyo:fancybuttons:1.8.3'
 
+    compile 'com.ayz4sci.androidfactory:downloadprogress:1.0.2'
+
     compile project(':filebrowser')
 
     testCompile 'junit:junit:4.12'

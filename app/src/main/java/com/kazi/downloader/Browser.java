@@ -20,6 +20,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import com.ayz4sci.androidfactory.DownloadProgressView;
 import com.kazi.downloader.databinding.ActivityBrowserBinding;
 
 
@@ -31,11 +32,15 @@ public class Browser extends Activity{
 
     private ActivityBrowserBinding binding;
     public String url;
+    private DownloadProgressView downloadProgressView;
+    private long downloadID;
+
     @Override
     protected void onCreate(Bundle saveedInstanceState){
 
         super.onCreate(saveedInstanceState);
         binding= DataBindingUtil.setContentView(this, R.layout.activity_browser);
+        downloadProgressView = (DownloadProgressView) findViewById(R.id.downloadProgressView);
 
         Bundle bundle = getIntent().getExtras();
         url=bundle.getString("url");
@@ -140,7 +145,25 @@ public class Browser extends Activity{
                        Environment.DIRECTORY_DOWNLOADS, URLUtil.guessFileName(
                                url, contentDisposition, mimeType));
                DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
-               dm.enqueue(request);
+               downloadID = dm.enqueue(request);
+
+               downloadProgressView.show(downloadID, new DownloadProgressView.DownloadStatusListener() {
+                   @Override
+                   public void downloadFailed(int reason) {
+                       System.err.println("Failed :" + reason);
+                   }
+
+                   @Override
+                   public void downloadSuccessful() {
+
+                   }
+
+                   @Override
+                   public void downloadCancelled() {
+
+                   }
+               });
+
                Toast.makeText(getApplicationContext(), "Downloading File",
                        Toast.LENGTH_LONG).show();
            }});
