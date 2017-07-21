@@ -1,8 +1,7 @@
 package com.kazi.downloader;
 
 import android.app.Activity;
-import android.app.DownloadManager;
-import android.content.Intent;
+
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -12,7 +11,7 @@ import android.os.Environment;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.webkit.CookieManager;
+
 import android.webkit.DownloadListener;
 import android.webkit.URLUtil;
 import android.webkit.WebChromeClient;
@@ -21,8 +20,11 @@ import android.webkit.WebViewClient;
 import android.widget.Toast;
 import android.webkit.WebSettings;
 
-import com.ayz4sci.androidfactory.DownloadProgressView;
 import com.kazi.downloader.databinding.ActivityBrowserBinding;
+import com.thin.downloadmanager.DefaultRetryPolicy;
+import com.thin.downloadmanager.DownloadRequest;
+import com.thin.downloadmanager.DownloadStatusListener;
+import com.thin.downloadmanager.ThinDownloadManager;
 
 
 /**
@@ -33,15 +35,15 @@ public class Browser extends Activity{
 
     private ActivityBrowserBinding binding;
     public String url;
-    private DownloadProgressView downloadProgressView;
-    private long downloadID;
+
+    private ThinDownloadManager downloadManager;
 
     @Override
     protected void onCreate(Bundle saveedInstanceState){
 
         super.onCreate(saveedInstanceState);
         binding= DataBindingUtil.setContentView(this, R.layout.activity_browser);
-        downloadProgressView = (DownloadProgressView) findViewById(R.id.downloadProgressView);
+
 
         Bundle bundle = getIntent().getExtras();
         url=bundle.getString("url");
@@ -127,51 +129,44 @@ public class Browser extends Activity{
         binding.webView.setDownloadListener(new DownloadListener() {
            @Override
            public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimeType, long contentLength) {
-               DownloadManager.Request request = new DownloadManager.Request(
-                       Uri.parse(url));
 
+               Uri downloadUri = Uri.parse(url);
+               Uri destinationUri = Uri.parse(Environment.getExternalStorageDirectory().getAbsolutePath()+"/Download/"+URLUtil.guessFileName(url, contentDisposition, mimeType));
 
-               request.setMimeType(mimeType);
+               binding.downloadInfo.setVisibility(View.VISIBLE);
+               binding.downloadProgressView.setProgress(0);
+               DownloadRequest downloadRequest = new DownloadRequest(downloadUri)
+                       .addCustomHeader("Auth-Token", "YourTokenApiKey")
+                       .setRetryPolicy(new DefaultRetryPolicy())
+                       .setDestinationURI(destinationUri).setPriority(DownloadRequest.Priority.HIGH)
+                       .setDownloadListener(new DownloadStatusListener() {
+                           @Override
+                           public void onDownloadComplete(int id) {
 
-               String cookies = CookieManager.getInstance().getCookie(url);
+                               Toast.makeText(getApplicationContext(), "Downloading Finished", Toast.LENGTH_SHORT).show();
+                               binding.downloadInfo.setVisibility(View.GONE);
+                           }
 
-               request.addRequestHeader("cookie", cookies);
+                           @Override
+                           public void onDownloadFailed(int id, int errorCode, String errorMessage) {
 
-               request.addRequestHeader("User-Agent", userAgent);
+                           }
 
-               request.setDescription("Downloading file...");
+                           @Override
+                           public void onProgress(int id, long totalBytes, long downlaodedBytes, int progress) {
+                               binding.downloadProgressView.setProgress(progress);
+                               binding.downloadedBytes.setText("" + downlaodedBytes+" kb");
+                               binding.totalBytes.setText("" + totalBytes+" kb");
+                           }
 
-               request.setTitle(URLUtil.guessFileName(url, contentDisposition,
-                       mimeType));
+                       });
+               downloadManager = new ThinDownloadManager();
+               int downloadId = downloadManager.add(downloadRequest);
 
-               request.allowScanningByMediaScanner();
-
-               request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-               request.setDestinationInExternalPublicDir(
-                       Environment.DIRECTORY_DOWNLOADS, URLUtil.guessFileName(
-                               url, contentDisposition, mimeType));
-               DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
-               downloadID = dm.enqueue(request);
-
-               downloadProgressView.show(downloadID, new DownloadProgressView.DownloadStatusListener() {
-                   @Override
-                   public void downloadFailed(int reason) {
-                       System.err.println("Failed :" + reason);
-                   }
-
-                   @Override
-                   public void downloadSuccessful() {
-
-                   }
-
-                   @Override
-                   public void downloadCancelled() {
-
-                   }
-               });
 
                Toast.makeText(getApplicationContext(), "Downloading File",
                        Toast.LENGTH_LONG).show();
+
            }});
 
 

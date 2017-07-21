@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.Leanback">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -30,7 +30,7 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <!-- WebBrowser theme -->
-    <style name="BrowserAppTheme" parent="Theme.Leanback.Browse"/>
+    <style name="BrowserAppTheme" parent="@android:style/Theme.NoTitleBar"/>
 
     <!-- File Manager Theme -->
     <style name="FileBrowserTheme" parent="Theme.AppCompat.Light.NoActionBar">

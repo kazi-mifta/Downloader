@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.URLUtil;
 import android.widget.EditText;
 
 import com.aditya.filebrowser.Constants;
@@ -65,6 +66,7 @@ public class MainActivity extends AppCompatActivity
         bundle.putString("url",url);
         i.putExtras(bundle);
         startActivity(i);
+
 
     }
 
