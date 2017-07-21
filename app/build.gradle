@@ -6,7 +6,7 @@ android {
     buildToolsVersion "26.0.0"
     defaultConfig {
         applicationId "com.kazi.downloader"
-        minSdkVersion 16
+        minSdkVersion 17
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
@@ -36,6 +36,8 @@ dependencies {
     compile 'com.github.medyo:fancybuttons:1.8.3'
 
     compile 'com.ayz4sci.androidfactory:downloadprogress:1.0.2'
+
+    compile "com.android.support:leanback-v17:+"
 
     compile project(':filebrowser')
 
