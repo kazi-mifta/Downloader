@@ -10,6 +10,8 @@
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.INSTALL_PACKAGES"
+        tools:ignore="ProtectedPermissions"/>
 
     <uses-feature android:name="android.hardware.touchscreen"
         android:required="false"/>
@@ -39,6 +41,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         >
+
         <activity android:name=".MainActivity"
             android:theme="@style/MainActivityTheme"
             android:configChanges="keyboard|keyboardHidden|navigation">
@@ -47,6 +50,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <meta-data android:name="com.amazon.input.cursor" android:value="pointer"/>
         </activity>
 
 
@@ -55,6 +59,8 @@
             android:label="@string/app_name"
             android:configChanges="keyboard|keyboardHidden|navigation"
             android:theme="@style/BrowserAppTheme">
+
+            <meta-data android:name="com.amazon.input.cursor" android:value="pointer"/>
 
         </activity>
 

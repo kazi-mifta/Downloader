@@ -2,6 +2,7 @@ package com.kazi.downloader;
 
 import android.app.Activity;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -25,6 +26,8 @@ import com.thin.downloadmanager.DefaultRetryPolicy;
 import com.thin.downloadmanager.DownloadRequest;
 import com.thin.downloadmanager.DownloadStatusListener;
 import com.thin.downloadmanager.ThinDownloadManager;
+
+import java.io.File;
 
 
 /**
@@ -128,10 +131,12 @@ public class Browser extends Activity{
 
         binding.webView.setDownloadListener(new DownloadListener() {
            @Override
-           public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimeType, long contentLength) {
+           public void onDownloadStart(String url, String userAgent, String contentDisposition, final String mimeType, long contentLength) {
 
                Uri downloadUri = Uri.parse(url);
-               Uri destinationUri = Uri.parse(Environment.getExternalStorageDirectory().getAbsolutePath()+"/Download/"+URLUtil.guessFileName(url, contentDisposition, mimeType));
+               final Uri destinationUri = Uri.parse(Environment.getExternalStorageDirectory().getAbsolutePath()+"/Download/"+URLUtil.guessFileName(url, contentDisposition, mimeType));
+
+               final String fileName = URLUtil.guessFileName(url, contentDisposition, mimeType);
 
                binding.downloadInfo.setVisibility(View.VISIBLE);
                binding.downloadProgressView.setProgress(0);
@@ -145,7 +150,14 @@ public class Browser extends Activity{
 
                                Toast.makeText(getApplicationContext(), "Downloading Finished", Toast.LENGTH_SHORT).show();
                                binding.downloadInfo.setVisibility(View.GONE);
+
+                               File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/Download/", fileName);
+                               Intent target = new Intent(Intent.ACTION_VIEW);
+                               target.setDataAndType(Uri.fromFile(file), mimeType);
+                               startActivity(target);
+
                            }
+
 
                            @Override
                            public void onDownloadFailed(int id, int errorCode, String errorMessage) {
