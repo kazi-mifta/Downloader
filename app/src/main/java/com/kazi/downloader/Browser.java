@@ -56,7 +56,7 @@ public class Browser extends Activity{
         else{
             setupWebView();
             loadFromDownloader(url);
-            setupTxtUrl();
+
         }
 
     }
@@ -149,7 +149,8 @@ public class Browser extends Activity{
 
                            @Override
                            public void onDownloadFailed(int id, int errorCode, String errorMessage) {
-
+                               Toast.makeText(getApplicationContext(), "Downloading Failed : " + errorCode, Toast.LENGTH_LONG).show();
+                               binding.downloadInfo.setVisibility(View.GONE);
                            }
 
                            @Override
@@ -162,7 +163,6 @@ public class Browser extends Activity{
                        });
                downloadManager = new ThinDownloadManager();
                int downloadId = downloadManager.add(downloadRequest);
-
 
                Toast.makeText(getApplicationContext(), "Downloading File",
                        Toast.LENGTH_LONG).show();
@@ -187,8 +187,13 @@ public class Browser extends Activity{
         });
     }
 
-    public void loadFromDownloader(String url){
+    public void loadFromDownloader(String url) {
+
+
         binding.webView.loadUrl(buildUrl(url));
+        setupTxtUrl();
+
+
     }
 
 }
