@@ -153,7 +153,7 @@ public class Browser extends Activity{
 
                                File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/Download/", fileName);
                                Intent target = new Intent(Intent.ACTION_VIEW);
-                               target.setDataAndType(Uri.fromFile(file), mimeType);
+                               target.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
                                startActivity(target);
 
                            }
