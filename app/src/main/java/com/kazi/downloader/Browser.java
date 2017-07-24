@@ -18,6 +18,7 @@ import android.webkit.URLUtil;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.Toast;
 import android.webkit.WebSettings;
 
@@ -38,6 +39,7 @@ public class Browser extends Activity{
 
     private ActivityBrowserBinding binding;
     public String url;
+
 
     private ThinDownloadManager downloadManager;
 
@@ -168,16 +170,34 @@ public class Browser extends Activity{
                            @Override
                            public void onProgress(int id, long totalBytes, long downlaodedBytes, int progress) {
                                binding.downloadProgressView.setProgress(progress);
-                               binding.downloadedBytes.setText("" + downlaodedBytes+" kb");
-                               binding.totalBytes.setText("" + totalBytes+" kb");
+
                            }
 
                        });
                downloadManager = new ThinDownloadManager();
-               int downloadId = downloadManager.add(downloadRequest);
+               final int downloadId = downloadManager.add(downloadRequest);
 
                Toast.makeText(getApplicationContext(), "Downloading File",
                        Toast.LENGTH_LONG).show();
+
+
+
+               binding.cancelButton.setOnClickListener( new View.OnClickListener(){
+                    @Override
+                    public void onClick(final View v){
+                        int status = downloadManager.cancel(downloadId);
+                        if(status == 1){
+                            Toast.makeText(getApplicationContext(), "Downloading Canceled",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                        else {Toast.makeText(getApplicationContext(), "Canceling Failed",
+                                Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+                });
+
+
 
            }});
 
