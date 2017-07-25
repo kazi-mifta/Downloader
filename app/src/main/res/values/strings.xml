@@ -47,4 +47,7 @@
         <item>Last Modified</item>
     </string-array>
 
+
+    <string name="help">Use The Fire TV Remote To NAvigate through the Downloader App. See the Picture Below For More Dettails.</string>
+
 </resources>

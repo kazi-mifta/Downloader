@@ -125,11 +125,14 @@ public class MainActivity extends AppCompatActivity
             i.putExtra(Constants.INITIAL_DIRECTORY, new File(Environment.getExternalStorageDirectory().getAbsolutePath(),"/Download").getAbsolutePath());
             startActivity(i);
 
-        } else if (id == R.id.nav_favourites) {
+        } /*else if (id == R.id.nav_favourites) {
 
         } else if (id == R.id.nav_settings) {
 
-        } else if (id == R.id.nav_help) {
+        }*/ else if (id == R.id.nav_help) {
+
+            Intent i=new Intent(this,Help.class);
+            startActivity(i);
 
         }
 
