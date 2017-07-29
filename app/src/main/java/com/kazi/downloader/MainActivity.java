@@ -10,6 +10,8 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +28,7 @@ public class MainActivity extends AppCompatActivity
 
     public String url=null;
     public String googleUrl= "www.google.com";
+    public boolean mSlideState = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,9 +54,26 @@ public class MainActivity extends AppCompatActivity
 
 
 
+        drawer.setDrawerListener(new ActionBarDrawerToggle(this,
+                drawer,
+                toolbar,
+                0,
+                0){
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+                mSlideState=false;//is Closed
+            }
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                mSlideState=true;//is Opened
+            }});
 
 
     }
+
+
 
     public void openBrowser(View view){
 
@@ -110,6 +130,9 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_home) {
 
+            Intent i=new Intent(this,MainActivity.class);
+            startActivity(i);
+
         } else if (id == R.id.nav_browser) {
 
 
@@ -122,7 +145,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_files) {
 
             Intent i = new Intent(this, FileBrowser.class); //works for all 3 main classes (i.e FileBrowser, FileChooser, FileBrowserWithCustomHandler)
-            i.putExtra(Constants.INITIAL_DIRECTORY, new File(Environment.getExternalStorageDirectory().getAbsolutePath(),"/Download").getAbsolutePath());
+            i.putExtra(Constants.INITIAL_DIRECTORY, new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath()).getAbsolutePath());
             startActivity(i);
 
         } /*else if (id == R.id.nav_favourites) {
@@ -140,4 +163,122 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
+
+    public void clickEventSlide(){
+
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+
+        if(mSlideState){
+            drawer.closeDrawer(Gravity.START);
+
+        }else{
+            drawer.openDrawer(Gravity.START);
+
+        }
+    }
+
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event){
+        boolean handled = false;
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        EditText text = (EditText)findViewById(R.id.editText);
+        text.setSelection(text.getText().length());
+        text.requestFocus();
+
+        switch (keyCode){
+            case KeyEvent.KEYCODE_BACK:
+                // ... handle right action
+
+                handled = true;
+                break;
+            case KeyEvent.KEYCODE_DPAD_UP:
+                // ... handle right action
+
+
+                handled = true;
+                break;
+            case KeyEvent.KEYCODE_DPAD_DOWN:
+                // ... handle right action
+                handled = true;
+                break;
+            case KeyEvent.KEYCODE_DPAD_CENTER:
+                // ... handle selections
+                handled = true;
+                break;
+            case KeyEvent.KEYCODE_BUTTON_A:
+                // ... handle selections
+                handled = true;
+                break;
+            case KeyEvent.KEYCODE_DPAD_LEFT:
+                // ... handle left action
+
+
+                handled = true;
+                break;
+            case KeyEvent.KEYCODE_DPAD_RIGHT:
+                // ... handle right action
+
+
+
+                handled = true;
+                break;
+            case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
+                // ... handle right action
+
+                Intent k=new Intent(this,Browser.class);
+                Bundle bundle= new Bundle();
+                bundle.putString("url",googleUrl);
+                k.putExtras(bundle);
+                startActivity(k);
+
+
+                handled = true;
+                break;
+            case KeyEvent.KEYCODE_MENU:
+
+                if(mSlideState){
+                    drawer.closeDrawer(Gravity.START);
+                    text.requestFocus();
+                }else{
+                    drawer.openDrawer(Gravity.START);
+                    text.requestFocus();
+                }
+
+                handled = true;
+                break;
+            case KeyEvent.KEYCODE_MEDIA_REWIND:
+                // ... handle right action
+                Intent j=new Intent(this,Help.class);
+                startActivity(j);
+
+                handled = true;
+                break;
+            case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD:
+                // ... handle right action
+
+                Intent i = new Intent(this, FileBrowser.class); //works for all 3 main classes (i.e FileBrowser, FileChooser, FileBrowserWithCustomHandler)
+                i.putExtra(Constants.INITIAL_DIRECTORY, new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath()).getAbsolutePath());
+                startActivity(i);
+
+
+
+                handled = true;
+                break;
+        }
+        return handled || super.onKeyDown(keyCode, event);
+    }
+
+
+
+
 }

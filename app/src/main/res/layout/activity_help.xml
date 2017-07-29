@@ -10,7 +10,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#ffffff"
-            android:textSize="45dp"
+            android:textSize="30dp"
             android:text="Livy"
             android:layout_margin="5dp"/>
 
@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#ffffff"
-            android:textSize="25dp"
+            android:textSize="18dp"
             android:text="@string/help"
             android:layout_margin="15dp"/>
 
@@ -33,15 +33,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#ffffff"
-            android:textSize="45dp"
+            android:textSize="30dp"
             android:text="Contact"
             android:layout_margin="5dp"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#ffffff"
-            android:textSize="25dp"
-            android:text="If You have any issues or need any help please mail me at abc@xyz.com"
+            android:textSize="18dp"
+            android:text="If You have any issues or need any help please contact me at Facebook.com/livykodi"
             android:layout_margin="15dp"/>
 
 

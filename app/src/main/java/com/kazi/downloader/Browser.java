@@ -9,6 +9,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -19,14 +21,18 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 import android.webkit.WebSettings;
 
+import com.aditya.filebrowser.Constants;
+import com.aditya.filebrowser.FileBrowser;
 import com.kazi.downloader.databinding.ActivityBrowserBinding;
 import com.thin.downloadmanager.DefaultRetryPolicy;
 import com.thin.downloadmanager.DownloadRequest;
 import com.thin.downloadmanager.DownloadStatusListener;
 import com.thin.downloadmanager.ThinDownloadManager;
+import com.thin.downloadmanager.util.Log;
 
 import java.io.File;
 
@@ -42,12 +48,14 @@ public class Browser extends Activity{
 
 
     private ThinDownloadManager downloadManager;
+    private int downloadId;
 
     @Override
     protected void onCreate(Bundle saveedInstanceState){
 
         super.onCreate(saveedInstanceState);
         binding= DataBindingUtil.setContentView(this, R.layout.activity_browser);
+
 
 
         Bundle bundle = getIntent().getExtras();
@@ -61,6 +69,7 @@ public class Browser extends Activity{
         else{
             setupWebView();
             loadFromDownloader(url);
+            setupTxtUrl();
 
         }
 
@@ -136,12 +145,14 @@ public class Browser extends Activity{
            public void onDownloadStart(String url, String userAgent, String contentDisposition, final String mimeType, long contentLength) {
 
                Uri downloadUri = Uri.parse(url);
-               final Uri destinationUri = Uri.parse(Environment.getExternalStorageDirectory().getAbsolutePath()+"/Download/"+URLUtil.guessFileName(url, contentDisposition, mimeType));
-
+               final Uri destinationUri = Uri.parse(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath()+ "/"+URLUtil.guessFileName(url, contentDisposition, mimeType));
                final String fileName = URLUtil.guessFileName(url, contentDisposition, mimeType);
 
                binding.downloadInfo.setVisibility(View.VISIBLE);
                binding.downloadProgressView.setProgress(0);
+               binding.cancelButton.setFocusable(true);
+               binding.cancelButton.setFocusableInTouchMode(true);
+               binding.cancelButton.requestFocus();
                DownloadRequest downloadRequest = new DownloadRequest(downloadUri)
                        .addCustomHeader("Auth-Token", "YourTokenApiKey")
                        .setRetryPolicy(new DefaultRetryPolicy())
@@ -153,7 +164,7 @@ public class Browser extends Activity{
                                Toast.makeText(getApplicationContext(), "Downloading Finished", Toast.LENGTH_SHORT).show();
                                binding.downloadInfo.setVisibility(View.GONE);
 
-                               File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/Download/", fileName);
+                               File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), fileName);
                                Intent target = new Intent(Intent.ACTION_VIEW);
                                target.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
                                startActivity(target);
@@ -175,7 +186,7 @@ public class Browser extends Activity{
 
                        });
                downloadManager = new ThinDownloadManager();
-               final int downloadId = downloadManager.add(downloadRequest);
+               downloadId = downloadManager.add(downloadRequest);
 
                Toast.makeText(getApplicationContext(), "Downloading File",
                        Toast.LENGTH_LONG).show();
@@ -226,6 +237,79 @@ public class Browser extends Activity{
         setupTxtUrl();
 
 
+    }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event){
+        boolean handled = false;
+
+
+        switch (keyCode){
+            case KeyEvent.KEYCODE_BACK:
+                // ... handle right action
+
+                Intent i=new Intent(this,MainActivity.class);
+                startActivity(i);
+
+                handled = true;
+                break;
+            case KeyEvent.KEYCODE_DPAD_UP:
+                // ... handle right action
+
+                handled = true;
+                break;
+            case KeyEvent.KEYCODE_DPAD_DOWN:
+                // ... handle right action
+                handled = true;
+                break;
+            case KeyEvent.KEYCODE_DPAD_CENTER:
+                // ... handle selections
+                handled = true;
+                break;
+            case KeyEvent.KEYCODE_BUTTON_A:
+                // ... handle selections
+                handled = true;
+                break;
+            case KeyEvent.KEYCODE_DPAD_LEFT:
+                // ... handle left action
+
+                handled = true;
+                break;
+            case KeyEvent.KEYCODE_DPAD_RIGHT:
+                // ... handle right action
+
+                handled = true;
+                break;
+            case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
+                // ... handle right action
+                int status = downloadManager.cancel(downloadId);
+                if(status == 1){
+                    Toast.makeText(getApplicationContext(), "Downloading Canceled",
+                            Toast.LENGTH_SHORT).show();
+                }
+                else {Toast.makeText(getApplicationContext(), "Canceling Failed",
+                        Toast.LENGTH_SHORT).show();
+
+                }
+                handled = true;
+                break;
+            case KeyEvent.KEYCODE_MENU:
+                // ... handle right action
+
+                handled = true;
+                break;
+            case KeyEvent.KEYCODE_MEDIA_REWIND:
+                // ... handle right action
+
+                handled = true;
+                break;
+            case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD:
+                // ... handle right action
+
+
+                handled = true;
+                break;
+        }
+        return handled || super.onKeyDown(keyCode, event);
     }
 
 }
