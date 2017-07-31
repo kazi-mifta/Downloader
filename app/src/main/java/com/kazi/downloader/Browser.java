@@ -150,9 +150,7 @@ public class Browser extends Activity{
 
                binding.downloadInfo.setVisibility(View.VISIBLE);
                binding.downloadProgressView.setProgress(0);
-               binding.cancelButton.setFocusable(true);
-               binding.cancelButton.setFocusableInTouchMode(true);
-               binding.cancelButton.requestFocus();
+
                DownloadRequest downloadRequest = new DownloadRequest(downloadUri)
                        .addCustomHeader("Auth-Token", "YourTokenApiKey")
                        .setRetryPolicy(new DefaultRetryPolicy())
