@@ -40,8 +40,12 @@ dependencies {
 
 
     compile 'com.mani:ThinDownloadManager:1.3.0'
+    compile 'com.tonyodev.fetch:fetch:1.1.3'
+
+    compile 'com.github.delight-im:Android-AdvancedWebView:v3.0.0'
 
     compile project(':filebrowser')
+
 
     testCompile 'junit:junit:4.12'
 }

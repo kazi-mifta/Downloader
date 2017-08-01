@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Override
+   /* @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -130,8 +130,6 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_home) {
 
-            Intent i=new Intent(this,MainActivity.class);
-            startActivity(i);
 
         } else if (id == R.id.nav_browser) {
 
@@ -165,23 +163,6 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-
-    public void clickEventSlide(){
-
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-
-
-        if(mSlideState){
-            drawer.closeDrawer(Gravity.START);
-
-        }else{
-            drawer.openDrawer(Gravity.START);
-
-        }
-    }
-
-
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event){
         boolean handled = false;
@@ -198,6 +179,7 @@ public class MainActivity extends AppCompatActivity
         switch (keyCode){
             case KeyEvent.KEYCODE_BACK:
                 // ... handle right action
+                super.onBackPressed();
 
                 handled = true;
                 break;

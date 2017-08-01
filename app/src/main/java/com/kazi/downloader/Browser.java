@@ -1,7 +1,6 @@
 package com.kazi.downloader;
 
 import android.app.Activity;
-
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
@@ -9,30 +8,22 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.design.widget.NavigationView;
-import android.support.v4.widget.DrawerLayout;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-
 import android.webkit.DownloadListener;
 import android.webkit.URLUtil;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 import android.webkit.WebSettings;
 
-import com.aditya.filebrowser.Constants;
-import com.aditya.filebrowser.FileBrowser;
 import com.kazi.downloader.databinding.ActivityBrowserBinding;
-import com.thin.downloadmanager.DefaultRetryPolicy;
-import com.thin.downloadmanager.DownloadRequest;
-import com.thin.downloadmanager.DownloadStatusListener;
-import com.thin.downloadmanager.ThinDownloadManager;
-import com.thin.downloadmanager.util.Log;
+
+import com.tonyodev.fetch.Fetch;
+import com.tonyodev.fetch.listener.FetchListener;
+import com.tonyodev.fetch.request.Request;
 
 import java.io.File;
 
@@ -41,14 +32,23 @@ import java.io.File;
  * Created by Kazi on 7/16/2017.
  */
 
+
 public class Browser extends Activity{
 
     private ActivityBrowserBinding binding;
     public String url;
 
+    public String dirPath;
+    public String fileName;
 
-    private ThinDownloadManager downloadManager;
-    private int downloadId;
+    public int i = 0;
+
+    public Toast mToast = null;
+
+    public long downloadId;
+
+    public Fetch fetch;
+
 
     @Override
     protected void onCreate(Bundle saveedInstanceState){
@@ -58,12 +58,12 @@ public class Browser extends Activity{
 
 
 
+
         Bundle bundle = getIntent().getExtras();
         url=bundle.getString("url");
 
         if(url.matches("")) {
             setupWebView();
-            //loadFromDownloader(url);
             setupTxtUrl();
         }
         else{
@@ -74,6 +74,7 @@ public class Browser extends Activity{
         }
 
     }
+
 
     public void back(View v) {
         if (binding.webView.canGoBack())
@@ -102,18 +103,16 @@ public class Browser extends Activity{
 
     private void setupWebView() {
 
-        binding.webView.getSettings().setSaveFormData(false);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT)
-            binding.webView.getSettings().setSavePassword(false);
-        binding.webView.getSettings().setJavaScriptEnabled(true);
-        binding.webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
-        WebSettings websettings = binding.webView.getSettings();
-        websettings.setJavaScriptEnabled(true);
-        websettings.setDomStorageEnabled(true);
-        websettings.setUserAgentString("Mozilla/5.0 (Linux; Android 4.1.2; C1905 Build/15.1.C.2.8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1847.114 Mobile Safari/537.36");
-        binding.webView.setVerticalScrollBarEnabled(false);
-        binding.webView.setHorizontalScrollBarEnabled(false);
-        binding.webView.setWebViewClient(new WebViewClient() {
+            binding.webView.setFocusable(true);
+            binding.webView.setFocusableInTouchMode(true);
+            binding.webView.getSettings().setJavaScriptEnabled(true);
+            binding.webView.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
+            binding.webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+            binding.webView.getSettings().setDomStorageEnabled(true);
+            binding.webView.getSettings().setDatabaseEnabled(true);
+            binding.webView.getSettings().setAppCacheEnabled(true);
+            binding.webView.setWebViewClient(new WebViewClient() {
 
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
@@ -140,18 +139,128 @@ public class Browser extends Activity{
         });
 
 
+    //Initiazlizing Fetch
+        new Fetch.Settings(this)
+                .setAllowedNetwork(Fetch.NETWORK_ALL)
+                .enableLogging(true)
+                .setConcurrentDownloadsLimit(1)
+                .apply();
+
+        fetch = Fetch.newInstance(this);
+        fetch.removeAll();
+
+
+
         binding.webView.setDownloadListener(new DownloadListener() {
-           @Override
+            @Override
            public void onDownloadStart(String url, String userAgent, String contentDisposition, final String mimeType, long contentLength) {
 
+                i=0;
+
                Uri downloadUri = Uri.parse(url);
-               final Uri destinationUri = Uri.parse(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath()+ "/"+URLUtil.guessFileName(url, contentDisposition, mimeType));
-               final String fileName = URLUtil.guessFileName(url, contentDisposition, mimeType);
 
-               binding.downloadInfo.setVisibility(View.VISIBLE);
-               binding.downloadProgressView.setProgress(0);
+               final Uri destinationUri = Uri.parse(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());
+               dirPath = destinationUri.toString();
 
-               DownloadRequest downloadRequest = new DownloadRequest(downloadUri)
+               fileName = URLUtil.guessFileName(url, contentDisposition, mimeType);
+
+
+
+               Request request = new Request(url,dirPath,fileName);
+               downloadId = fetch.enqueue(request);
+
+               if(downloadId != Fetch.ENQUEUE_ERROR_ID) {
+                   //Download was successfully queued for download.
+
+                   if(mToast!= null){
+                       mToast.cancel();
+                   }
+                   mToast = Toast.makeText(getApplicationContext(), "Downloading File",
+                           Toast.LENGTH_LONG);
+                   mToast.show();
+
+                   binding.downloadInfo.setVisibility(View.VISIBLE);
+                   binding.downloadProgressView.setProgress(0);
+               }
+
+               fetch.addFetchListener(new FetchListener() {
+
+                   @Override
+                   public void onUpdate(long id, int status, int progress, long downloadedBytes, long fileSize, int error) {
+
+                       if(downloadId == id && status == Fetch.STATUS_DOWNLOADING) {
+
+                           binding.downloadProgressView.setProgress(progress);
+
+                       }else if( downloadId==id && status == Fetch.STATUS_DONE){
+
+                           if(mToast!= null){
+                               mToast.cancel();
+                           }
+                           mToast = Toast.makeText(getApplicationContext(), "Downloading Finished", Toast.LENGTH_SHORT);
+                           mToast.show();
+
+                           binding.downloadInfo.setVisibility(View.GONE);
+
+                           if(i == 0) {
+                               File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), fileName);
+                               Intent target = new Intent(Intent.ACTION_VIEW);
+                               target.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
+                               startActivity(target);
+                               i++;
+                           }
+
+                         }else{
+                           //An error occurred
+                           if(mToast!= null){
+                               mToast.cancel();
+                           }
+                           mToast = Toast.makeText(getApplicationContext(), "Downloading Failed : " + status, Toast.LENGTH_LONG);
+                           mToast.show();
+
+                           binding.downloadInfo.setVisibility(View.GONE);
+
+                       }
+                   }
+               });
+
+               binding.cancelButton.setOnClickListener( new View.OnClickListener(){
+                   @Override
+                   public void onClick(final View v){
+
+                       fetch.remove(downloadId);
+                       fetch.removeAll();
+                       binding.downloadInfo.setVisibility(View.GONE);
+
+                       File file = new File(dirPath, fileName);
+                       boolean deleted = file.delete();
+
+
+                       if (deleted == true) {
+                           if(mToast!= null){
+                               mToast.cancel();
+                           }
+                           mToast = Toast.makeText(getApplicationContext(), "Downloading Canceled & File Deleted",
+                                   Toast.LENGTH_SHORT);
+                            mToast.show();
+                       }
+                       else {
+                           if(mToast!= null){
+                               mToast.cancel();
+                           }
+                           mToast = Toast.makeText(getApplicationContext(), "Downloading Canceled",
+                                   Toast.LENGTH_SHORT);
+                           mToast.show();
+                       }
+                   }
+               });
+
+
+           }});
+    }
+
+
+              /* DownloadRequest downloadRequest = new DownloadRequest(downloadUri)
                        .addCustomHeader("Auth-Token", "YourTokenApiKey")
                        .setRetryPolicy(new DefaultRetryPolicy())
                        .setDestinationURI(destinationUri).setPriority(DownloadRequest.Priority.HIGH)
@@ -186,8 +295,7 @@ public class Browser extends Activity{
                downloadManager = new ThinDownloadManager();
                downloadId = downloadManager.add(downloadRequest);
 
-               Toast.makeText(getApplicationContext(), "Downloading File",
-                       Toast.LENGTH_LONG).show();
+               v
 
 
 
@@ -204,14 +312,9 @@ public class Browser extends Activity{
 
                         }
                     }
-                });
+                });*/
 
 
-
-           }});
-
-
-    }
 
     private void setupTxtUrl() {
         binding.txtUrl.setOnKeyListener(new View.OnKeyListener() {
@@ -236,17 +339,18 @@ public class Browser extends Activity{
 
 
     }
+
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event){
         boolean handled = false;
 
 
         switch (keyCode){
+
             case KeyEvent.KEYCODE_BACK:
                 // ... handle right action
-
-                Intent i=new Intent(this,MainActivity.class);
-                startActivity(i);
+                super.onBackPressed();
 
                 handled = true;
                 break;
@@ -279,15 +383,32 @@ public class Browser extends Activity{
                 break;
             case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
                 // ... handle right action
-                int status = downloadManager.cancel(downloadId);
-                if(status == 1){
-                    Toast.makeText(getApplicationContext(), "Downloading Canceled",
-                            Toast.LENGTH_SHORT).show();
-                }
-                else {Toast.makeText(getApplicationContext(), "Canceling Failed",
-                        Toast.LENGTH_SHORT).show();
+            {
+                fetch.remove(downloadId);
+                fetch.removeAll();
+                binding.downloadInfo.setVisibility(View.GONE);
 
+                File file = new File(dirPath, fileName);
+                boolean deleted = file.delete();
+
+                if (deleted == true) {
+                    if(mToast!= null){
+                        mToast.cancel();
+                    }
+                    mToast = Toast.makeText(getApplicationContext(), "Downloading Canceled & File Deleted",
+                            Toast.LENGTH_SHORT);
+                    mToast.show();
                 }
+                else {
+                    if(mToast!= null){
+                        mToast.cancel();
+                    }
+                    mToast = Toast.makeText(getApplicationContext(), "Downloading Canceled",
+                            Toast.LENGTH_SHORT);
+                    mToast.show();
+                }
+            }
+
                 handled = true;
                 break;
             case KeyEvent.KEYCODE_MENU:
@@ -308,6 +429,14 @@ public class Browser extends Activity{
                 break;
         }
         return handled || super.onKeyDown(keyCode, event);
+    }
+
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        fetch.release();
     }
 
 }
