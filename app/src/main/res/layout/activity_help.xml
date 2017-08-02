@@ -36,6 +36,7 @@
             android:textSize="30dp"
             android:text="Contact"
             android:layout_margin="5dp"/>
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -45,6 +46,102 @@
             android:layout_margin="15dp"/>
 
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#ffffff"
+            android:textSize="30dp"
+            android:text="Shortcuts"
+            android:layout_margin="5dp"/>
+
+        <TextView
+            android:id="@+id/shortcut_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/btn_download"
+            android:textColor="#FFFFFF"
+            android:text="If You don't have a Mouse, Try The Buttons From Your Fire TV Remote To Quickly Navigate between Sections."
+            android:textSize="18dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/shortcut_text"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="30dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="10dp">
+                <ImageView
+                    android:id="@+id/play_pause"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_play_circle_outline_white_24dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textSize="18dp"
+                    android:gravity="center"
+                    android:text="Go To Browser"
+                    android:layout_marginLeft="20dp"
+                    android:textColor="#ffffff"/>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="10dp">
+                <ImageView
+                    android:id="@+id/forwar"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_fast_forward_white_24dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textSize="18dp"
+                    android:gravity="center"
+                    android:text="Go To File Explorer"
+                    android:layout_marginLeft="20dp"
+                    android:textColor="#ffffff"/>
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="10dp">
+                <ImageView
+                    android:id="@+id/rewind"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_fast_rewind_white_24dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textSize="18dp"
+                    android:gravity="center"
+                    android:text="Go To Help Section"
+                    android:layout_marginLeft="20dp"
+                    android:textColor="#ffffff"/>
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
 
     </LinearLayout>
 
