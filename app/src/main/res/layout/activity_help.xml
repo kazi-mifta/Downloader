@@ -29,21 +29,7 @@
             android:scaleType="center"
             android:layout_marginTop="40dp"/>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="#ffffff"
-            android:textSize="30dp"
-            android:text="Contact"
-            android:layout_margin="5dp"/>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="#ffffff"
-            android:textSize="18dp"
-            android:text="If You have any issues or need any help please contact me at Facebook.com/livykodi"
-            android:layout_margin="15dp"/>
 
 
         <TextView
@@ -59,7 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#FFFFFF"
-            android:text="If You don't have a Mouse, Try The Buttons From Your Fire TV Remote To Quickly Navigate between Sections."
+            android:text="@string/shortcuts"
             android:textSize="18dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
@@ -140,6 +126,23 @@
 
 
         </LinearLayout>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#ffffff"
+            android:textSize="30dp"
+            android:text="Contact"
+            android:layout_margin="5dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#ffffff"
+            android:textSize="18dp"
+            android:text="If You have any issues or need any help please contact me at Facebook.com/livykodi"
+            android:layout_margin="15dp"/>
 
     </LinearLayout>
 

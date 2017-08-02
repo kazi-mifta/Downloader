@@ -49,5 +49,8 @@
 
 
     <string name="help">Use The Fire TV Remote To NAvigate through the Downloader App. See the Picture Below For More Dettails.</string>
+    <string name="shortcuts">If You don\'t have a Mouse, Try The Buttons From Your Fire TV Remote To Quickly Navigate between Sections.</string>
+    <string name="contac">If You have any issues or need any help please contact me at Facebook.com/livykodi</string>
+
 
 </resources>
