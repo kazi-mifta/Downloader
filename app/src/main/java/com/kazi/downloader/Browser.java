@@ -260,61 +260,6 @@ public class Browser extends Activity{
     }
 
 
-              /* DownloadRequest downloadRequest = new DownloadRequest(downloadUri)
-                       .addCustomHeader("Auth-Token", "YourTokenApiKey")
-                       .setRetryPolicy(new DefaultRetryPolicy())
-                       .setDestinationURI(destinationUri).setPriority(DownloadRequest.Priority.HIGH)
-                       .setDownloadListener(new DownloadStatusListener() {
-                           @Override
-                           public void onDownloadComplete(int id) {
-
-                               Toast.makeText(getApplicationContext(), "Downloading Finished", Toast.LENGTH_SHORT).show();
-                               binding.downloadInfo.setVisibility(View.GONE);
-
-                               File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), fileName);
-                               Intent target = new Intent(Intent.ACTION_VIEW);
-                               target.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
-                               startActivity(target);
-
-                           }
-
-
-                           @Override
-                           public void onDownloadFailed(int id, int errorCode, String errorMessage) {
-                               Toast.makeText(getApplicationContext(), "Downloading Failed : " + errorCode, Toast.LENGTH_LONG).show();
-                               binding.downloadInfo.setVisibility(View.GONE);
-                           }
-
-                           @Override
-                           public void onProgress(int id, long totalBytes, long downlaodedBytes, int progress) {
-                               binding.downloadProgressView.setProgress(progress);
-
-                           }
-
-                       });
-               downloadManager = new ThinDownloadManager();
-               downloadId = downloadManager.add(downloadRequest);
-
-               v
-
-
-
-               binding.cancelButton.setOnClickListener( new View.OnClickListener(){
-                    @Override
-                    public void onClick(final View v){
-                        int status = downloadManager.cancel(downloadId);
-                        if(status == 1){
-                            Toast.makeText(getApplicationContext(), "Downloading Canceled",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                        else {Toast.makeText(getApplicationContext(), "Canceling Failed",
-                                Toast.LENGTH_SHORT).show();
-
-                        }
-                    }
-                });*/
-
-
 
     private void setupTxtUrl() {
         binding.txtUrl.setOnKeyListener(new View.OnKeyListener() {
