@@ -1,5 +1,6 @@
 package com.kazi.downloader;
 
+import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
@@ -12,16 +13,27 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.webkit.URLUtil;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.aditya.filebrowser.Constants;
 import com.aditya.filebrowser.FileBrowser;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
 
 import java.io.File;
+import java.util.concurrent.TimeUnit;
+
+import ua.com.crosp.solutions.library.prettytoast.PrettyToast;
+
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -30,12 +42,28 @@ public class MainActivity extends AppCompatActivity
     public String googleUrl= "www.google.com";
     public boolean mSlideState = false;
 
+    public PrettyToast prettyToast;
+
+    private PrefManager prefManager;
+
+    private AdView mAdView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        PrettyToast.initIcons();
+
+
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        EditText text = (EditText)findViewById(R.id.editText);
         setSupportActionBar(toolbar);
+
+
+        mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder()
+                .build();
+        mAdView.loadAd(adRequest);
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -49,8 +77,36 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
-        EditText text = (EditText)findViewById(R.id.editText);
-        text.setSelection(text.getText().length());
+
+        prefManager = new PrefManager(this);
+
+        if(prefManager.isFirstTimeLaunch()){
+
+
+            prettyToast = new PrettyToast.Builder(getApplicationContext())
+                    .withCustomView(LayoutInflater.from(MainActivity.this).inflate(R.layout.navigation_layout, null, false))
+                    .withDuration(Toast.LENGTH_LONG)
+                    .build();
+
+            for(int i=0;i<6;i++){
+                prettyToast.show();
+            }
+
+            prefManager.setIsFirstTimeLaunch(false);
+        }
+        else {
+
+            if(text.requestFocus()) {
+                getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                text.isFocusable();
+                text.isFocusableInTouchMode();
+            }
+        }
+
+
+
+
+
 
 
 
@@ -69,6 +125,11 @@ public class MainActivity extends AppCompatActivity
                 super.onDrawerOpened(drawerView);
                 mSlideState=true;//is Opened
             }});
+
+
+
+
+
 
 
     }

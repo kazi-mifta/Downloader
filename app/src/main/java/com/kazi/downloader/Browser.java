@@ -19,6 +19,8 @@ import android.webkit.WebViewClient;
 import android.widget.Toast;
 import android.webkit.WebSettings;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.kazi.downloader.databinding.ActivityBrowserBinding;
 
 import com.tonyodev.fetch.Fetch;
@@ -49,6 +51,8 @@ public class Browser extends Activity{
 
     public Fetch fetch;
 
+    private AdView mAdView;
+
 
     @Override
     protected void onCreate(Bundle saveedInstanceState){
@@ -72,6 +76,11 @@ public class Browser extends Activity{
             setupTxtUrl();
 
         }
+
+        mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder()
+                .build();
+        mAdView.loadAd(adRequest);
 
     }
 

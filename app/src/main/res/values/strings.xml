@@ -48,9 +48,12 @@
     </string-array>
 
 
-    <string name="help">Use The Fire TV Remote To NAvigate through the Downloader App. See the Picture Below For More Dettails.</string>
+    <string name="help">Use The Fire TV Remote To Navigate through the Downloader App. See the Picture Below For More Dettails.</string>
     <string name="shortcuts">If You don\'t have a Mouse, Try The Buttons From Your Fire TV Remote To Quickly Navigate between Sections.</string>
-    <string name="contac">If You have any issues or need any help please contact me at Facebook.com/livykodi</string>
+    <string name="contact">If You have any issues or need any help please contact me at Facebook.com/livykodi</string>
+    <string name="navigate_toast">Press the Rewind button to learn how To Naviagte Through The App</string>
 
+    <!-- AdMob ad unit IDs -->
+    <string name="banner_footer">ca-app-pub-3296874176750366/9377928049</string>
 
 </resources>
