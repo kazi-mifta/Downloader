@@ -20,7 +20,7 @@ Smart Download Manager For Android TV.
 
 To report a specific problem or feature request, please mail me at kazimifta13@gmail.com
 
-[Simple slide]: <https://github.com/kazi-mifta/Livy-TvDownlonder/tree/master/images/navigation.png>
-[Custom slide]: <https://github.com/kazi-mifta/Livy-TvDownlonder/tree/master/images/home.png>
-[Permission slide]: <https://github.com/kazi-mifta/Livy-TvDownlonder/tree/master/images/browser.png>
-[Finish slide]: <https://github.com/kazi-mifta/Livy-TvDownlonder/tree/master/images/file_manager.png>
+[Simple slide]: <https://github.com/kazi-mifta/Livy-TvDownlonder/blob/master/images/navigation.PNG>
+[Custom slide]: <https://github.com/kazi-mifta/Livy-TvDownlonder/blob/master/images/home.PNG>
+[Permission slide]: <https://github.com/kazi-mifta/Livy-TvDownlonder/blob/master/images/browser.PNG>
+[Finish slide]: <https://github.com/kazi-mifta/Livy-TvDownlonder/blob/master/images/file_manager.PNG>
